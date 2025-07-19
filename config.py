@@ -3,60 +3,38 @@
 
 STREAMING_WEBSITES = [
     {
-        "name": "123Movies",
-        "base_url": "https://123movies.com",
-        "search_url": "https://123movies.com/search/",
+        "name": "5MovieRulz",
+        "base_url": "https://www.5movierulz.rich",
+        "search_url": "https://www.5movierulz.rich/search/",
         "enabled": True,
-        "delay": 2
+        "delay": 2,
+        "search_selector": "input[name='s']",
+        "results_selector": ".movie-item, .film-item, .search-item",
+        "title_selector": "h2, .title, .movie-title",
+        "streaming_selectors": [
+            "a[href*='watch']",
+            "a[href*='stream']", 
+            "a[href*='play']",
+            ".watch-link",
+            ".stream-link"
+        ]
     },
     {
-        "name": "Putlocker",
-        "base_url": "https://putlocker.com",
-        "search_url": "https://putlocker.com/search/",
+        "name": "MoviezWap",
+        "base_url": "https://www.moviezwap.pink",
+        "search_url": "https://www.moviezwap.pink/search/",
         "enabled": True,
-        "delay": 2
-    },
-    {
-        "name": "Fmovies",
-        "base_url": "https://fmovies.to",
-        "search_url": "https://fmovies.to/search/",
-        "enabled": True,
-        "delay": 2
-    },
-    {
-        "name": "SolarMovie",
-        "base_url": "https://solarmovie.com",
-        "search_url": "https://solarmovie.com/search/",
-        "enabled": True,
-        "delay": 2
-    },
-    {
-        "name": "WatchSeries",
-        "base_url": "https://watchseries.com",
-        "search_url": "https://watchseries.com/search/",
-        "enabled": True,
-        "delay": 2
-    },
-    {
-        "name": "GoMovies",
-        "base_url": "https://gomovies.com",
-        "search_url": "https://gomovies.com/search/",
-        "enabled": True,
-        "delay": 2
-    },
-    {
-        "name": "Movie4k",
-        "base_url": "https://movie4k.com",
-        "search_url": "https://movie4k.com/search/",
-        "enabled": True,
-        "delay": 2
-    },
-    {
-        "name": "CineBloom",
-        "base_url": "https://cinebloom.com",
-        "search_url": "https://cinebloom.com/search/",
-        "enabled": True,
-        "delay": 2
+        "delay": 2,
+        "search_selector": "input[name='s']",
+        "results_selector": ".movie-item, .film-item, .search-item",
+        "title_selector": "h2, .title, .movie-title",
+        "streaming_selectors": [
+            "a[href*='watch']",
+            "a[href*='stream']",
+            "a[href*='play']", 
+            ".watch-link",
+            ".stream-link"
+        ]
     }
 ]
 

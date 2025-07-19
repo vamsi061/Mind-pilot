@@ -93,28 +93,42 @@ class MovieScraper:
         site_name = site_config['name']
         
         try:
-            # Construct search URL
-            search_query = quote(movie_name)
-            search_url = f"{site_config['search_url']}{search_query}"
-            
             logger.info(f"Searching {site_name} for: {movie_name}")
             
-            # Make request
-            html_content = self.make_request(search_url, use_selenium=True)
-            if not html_content:
+            # First, get the main page to find the search form
+            main_page = self.make_request(site_config['base_url'], use_selenium=True)
+            if not main_page:
                 return results
             
-            # Parse results
-            soup = BeautifulSoup(html_content, 'html.parser')
+            soup = BeautifulSoup(main_page, 'html.parser')
             
-            # Extract movie links (this will vary by site)
-            movie_links = self.extract_movie_links(soup, site_config)
-            
-            for link in movie_links[:5]:  # Limit to first 5 results
-                movie_url = urljoin(site_config['base_url'], link)
-                movie_info = self.extract_movie_info(movie_url, site_config)
-                if movie_info:
-                    results.append(movie_info)
+            # Find search form and submit search
+            search_form = soup.find('form', {'method': 'get'}) or soup.find('form', {'method': 'post'})
+            if search_form:
+                # Try to find search input
+                search_input = search_form.find('input', {'name': 's'}) or search_form.find('input', {'type': 'search'}) or search_form.find('input', {'placeholder': lambda x: x and 'search' in x.lower()})
+                
+                if search_input:
+                    # Construct search URL
+                    search_query = quote(movie_name)
+                    search_url = f"{site_config['base_url']}/?s={search_query}"
+                    
+                    logger.info(f"Searching {site_name} at: {search_url}")
+                    
+                    # Make search request
+                    search_results = self.make_request(search_url, use_selenium=True)
+                    if search_results:
+                        # Parse search results
+                        results_soup = BeautifulSoup(search_results, 'html.parser')
+                        
+                        # Extract movie links from search results
+                        movie_links = self.extract_movie_links_from_search(results_soup, site_config)
+                        
+                        for link in movie_links[:5]:  # Limit to first 5 results
+                            movie_url = urljoin(site_config['base_url'], link)
+                            movie_info = self.extract_movie_info(movie_url, site_config)
+                            if movie_info:
+                                results.append(movie_info)
             
             time.sleep(site_config.get('delay', 2))
             
@@ -152,6 +166,52 @@ class MovieScraper:
                 href = link.get('href', '').lower()
                 if any(keyword in href for keyword in ['movie', 'film', 'watch']):
                     links.append(link.get('href'))
+        
+        return list(set(links))  # Remove duplicates
+
+    def extract_movie_links_from_search(self, soup, site_config):
+        """Extract movie links from search results page specifically for these sites"""
+        links = []
+        
+        # Try multiple selectors for these specific sites
+        selectors = [
+            'article a[href*="/movie/"]',
+            'article a[href*="/film/"]',
+            '.movie-item a',
+            '.film-item a',
+            '.search-item a',
+            '.post a[href*="/movie/"]',
+            '.post a[href*="/film/"]',
+            'h2 a',
+            'h3 a',
+            '.title a',
+            '.movie-title a',
+            'a[href*="/movie/"]',
+            'a[href*="/film/"]'
+        ]
+        
+        for selector in selectors:
+            found_links = soup.select(selector)
+            if found_links:
+                for link in found_links:
+                    href = link.get('href')
+                    if href and not href.startswith('http'):
+                        # Make sure it's a relative link to a movie page
+                        if any(keyword in href.lower() for keyword in ['movie', 'film', 'watch', 'stream']):
+                            links.append(href)
+                if links:
+                    break
+        
+        # If still no links, try a broader approach
+        if not links:
+            all_links = soup.find_all('a', href=True)
+            for link in all_links:
+                href = link.get('href', '')
+                # Look for links that seem to be movie pages
+                if (href and not href.startswith('http') and 
+                    any(keyword in href.lower() for keyword in ['movie', 'film', 'watch', 'stream']) and
+                    not any(keyword in href.lower() for keyword in ['category', 'tag', 'author', 'page'])):
+                    links.append(href)
         
         return list(set(links))  # Remove duplicates
     
@@ -209,11 +269,19 @@ class MovieScraper:
             'a[href*="watch"]',
             'a[href*="stream"]',
             'a[href*="play"]',
+            'a[href*="embed"]',
+            'a[href*="player"]',
             '.watch-link',
             '.stream-link',
             '.play-button',
+            '.embed-link',
             'a[class*="watch"]',
-            'a[class*="stream"]'
+            'a[class*="stream"]',
+            'a[class*="play"]',
+            'a[class*="embed"]',
+            '.btn-watch',
+            '.btn-stream',
+            '.btn-play'
         ]
         
         for selector in link_selectors:
@@ -223,10 +291,36 @@ class MovieScraper:
                 if href:
                     full_url = urljoin(site_config['base_url'], href)
                     if self.is_valid_streaming_url(full_url):
+                        link_text = link.get_text().strip()
+                        if not link_text:
+                            link_text = link.get('title', '') or link.get('alt', '') or 'Watch Movie'
+                        
                         streaming_links.append({
                             'url': full_url,
-                            'text': link.get_text().strip() or 'Watch Movie'
+                            'text': link_text
                         })
+        
+        # Also look for iframe embeds which are common on these sites
+        iframes = soup.find_all('iframe', src=True)
+        for iframe in iframes:
+            src = iframe.get('src')
+            if src and self.is_valid_streaming_url(src):
+                streaming_links.append({
+                    'url': src,
+                    'text': 'Direct Stream (Embedded Player)'
+                })
+        
+        # Look for video sources
+        video_tags = soup.find_all('video')
+        for video in video_tags:
+            sources = video.find_all('source')
+            for source in sources:
+                src = source.get('src')
+                if src and self.is_valid_streaming_url(src):
+                    streaming_links.append({
+                        'url': src,
+                        'text': 'Direct Video Stream'
+                    })
         
         return streaming_links
     
@@ -242,11 +336,40 @@ class MovieScraper:
             r'play',
             r'video',
             r'embed',
-            r'player'
+            r'player',
+            r'\.mp4',
+            r'\.m3u8',
+            r'\.webm',
+            r'\.avi',
+            r'\.mkv'
+        ]
+        
+        # Also check for common streaming domains
+        streaming_domains = [
+            'youtube.com',
+            'vimeo.com',
+            'dailymotion.com',
+            'streamable.com',
+            'vidcloud',
+            'vidstream',
+            'streamango',
+            'openload',
+            'rapidvideo',
+            'streamcherry'
         ]
         
         url_lower = url.lower()
-        return any(re.search(pattern, url_lower) for pattern in streaming_patterns)
+        
+        # Check for streaming patterns
+        has_streaming_pattern = any(re.search(pattern, url_lower) for pattern in streaming_patterns)
+        
+        # Check for streaming domains
+        has_streaming_domain = any(domain in url_lower for domain in streaming_domains)
+        
+        # Check if it's a direct video file
+        is_video_file = any(ext in url_lower for ext in ['.mp4', '.m3u8', '.webm', '.avi', '.mkv'])
+        
+        return has_streaming_pattern or has_streaming_domain or is_video_file
     
     def search_all_sites(self, movie_name):
         """Search for movie across all configured streaming sites"""
