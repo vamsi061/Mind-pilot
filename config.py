@@ -5,35 +5,41 @@ STREAMING_WEBSITES = [
     {
         "name": "5MovieRulz",
         "base_url": "https://www.5movierulz.rich",
-        "search_url": "https://www.5movierulz.rich/search/",
+        "search_url": "https://www.5movierulz.rich/search_movies",
+        "search_param": "s",
         "enabled": True,
         "delay": 2,
         "search_selector": "input[name='s']",
-        "results_selector": ".movie-item, .film-item, .search-item",
+        "results_selector": "a[href*='/movie/']",
         "title_selector": "h2, .title, .movie-title",
         "streaming_selectors": [
             "a[href*='watch']",
             "a[href*='stream']", 
             "a[href*='play']",
+            "a[href*='download']",
             ".watch-link",
-            ".stream-link"
+            ".stream-link",
+            ".download-link"
         ]
     },
     {
         "name": "MoviezWap",
         "base_url": "https://www.moviezwap.pink",
-        "search_url": "https://www.moviezwap.pink/search/",
+        "search_url": "https://www.moviezwap.pink/search.php",
+        "search_param": "q",
         "enabled": True,
         "delay": 2,
-        "search_selector": "input[name='s']",
-        "results_selector": ".movie-item, .film-item, .search-item",
+        "search_selector": "input[name='q']",
+        "results_selector": "a[href*='/movie/']",
         "title_selector": "h2, .title, .movie-title",
         "streaming_selectors": [
             "a[href*='watch']",
             "a[href*='stream']",
-            "a[href*='play']", 
+            "a[href*='play']",
+            "a[href*='download']",
             ".watch-link",
-            ".stream-link"
+            ".stream-link",
+            ".download-link"
         ]
     }
 ]

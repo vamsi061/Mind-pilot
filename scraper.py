@@ -109,9 +109,10 @@ class MovieScraper:
                 search_input = search_form.find('input', {'name': 's'}) or search_form.find('input', {'type': 'search'}) or search_form.find('input', {'placeholder': lambda x: x and 'search' in x.lower()})
                 
                 if search_input:
-                    # Construct search URL
+                    # Construct search URL using the correct search URL and parameter
                     search_query = quote(movie_name)
-                    search_url = f"{site_config['base_url']}/?s={search_query}"
+                    search_param = site_config.get('search_param', 's')
+                    search_url = f"{site_config['search_url']}?{search_param}={search_query}"
                     
                     logger.info(f"Searching {site_name} at: {search_url}")
                     
@@ -173,34 +174,45 @@ class MovieScraper:
         """Extract movie links from search results page specifically for these sites"""
         links = []
         
-        # Try multiple selectors for these specific sites
-        selectors = [
-            'article a[href*="/movie/"]',
-            'article a[href*="/film/"]',
-            '.movie-item a',
-            '.film-item a',
-            '.search-item a',
-            '.post a[href*="/movie/"]',
-            '.post a[href*="/film/"]',
-            'h2 a',
-            'h3 a',
-            '.title a',
-            '.movie-title a',
-            'a[href*="/movie/"]',
-            'a[href*="/film/"]'
-        ]
+        # Use the site-specific results selector
+        results_selector = site_config.get('results_selector', 'a[href*="/movie/"]')
         
-        for selector in selectors:
-            found_links = soup.select(selector)
-            if found_links:
-                for link in found_links:
-                    href = link.get('href')
-                    if href and not href.startswith('http'):
-                        # Make sure it's a relative link to a movie page
-                        if any(keyword in href.lower() for keyword in ['movie', 'film', 'watch', 'stream']):
-                            links.append(href)
-                if links:
-                    break
+        # Try the site-specific selector first
+        found_links = soup.select(results_selector)
+        if found_links:
+            for link in found_links:
+                href = link.get('href')
+                if href and not href.startswith('http'):
+                    # Make sure it's a relative link to a movie page
+                    if any(keyword in href.lower() for keyword in ['movie', 'film', 'watch', 'stream']):
+                        links.append(href)
+        
+        # If no links found, try additional selectors
+        if not links:
+            additional_selectors = [
+                'article a[href*="/movie/"]',
+                'article a[href*="/film/"]',
+                '.movie-item a',
+                '.film-item a',
+                '.search-item a',
+                '.post a[href*="/movie/"]',
+                '.post a[href*="/film/"]',
+                'h2 a',
+                'h3 a',
+                '.title a',
+                '.movie-title a'
+            ]
+            
+            for selector in additional_selectors:
+                found_links = soup.select(selector)
+                if found_links:
+                    for link in found_links:
+                        href = link.get('href')
+                        if href and not href.startswith('http'):
+                            if any(keyword in href.lower() for keyword in ['movie', 'film', 'watch', 'stream']):
+                                links.append(href)
+                    if links:
+                        break
         
         # If still no links, try a broader approach
         if not links:
@@ -271,17 +283,21 @@ class MovieScraper:
             'a[href*="play"]',
             'a[href*="embed"]',
             'a[href*="player"]',
+            'a[href*="download"]',
             '.watch-link',
             '.stream-link',
             '.play-button',
             '.embed-link',
+            '.download-link',
             'a[class*="watch"]',
             'a[class*="stream"]',
             'a[class*="play"]',
             'a[class*="embed"]',
+            'a[class*="download"]',
             '.btn-watch',
             '.btn-stream',
-            '.btn-play'
+            '.btn-play',
+            '.btn-download'
         ]
         
         for selector in link_selectors:
@@ -337,11 +353,13 @@ class MovieScraper:
             r'video',
             r'embed',
             r'player',
+            r'download',
             r'\.mp4',
             r'\.m3u8',
             r'\.webm',
             r'\.avi',
-            r'\.mkv'
+            r'\.mkv',
+            r'\.3gp'
         ]
         
         # Also check for common streaming domains
