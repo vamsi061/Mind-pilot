@@ -5,7 +5,7 @@ Flask-based web application for remote access
 """
 
 from flask import Flask, render_template, request, jsonify, session
-from movie_ai_agent import MovieAIAgent
+from advanced_scraper import AdvancedMovieScraper
 import threading
 import time
 import json
@@ -21,7 +21,7 @@ search_results = {}
 
 class SearchManager:
     def __init__(self):
-        self.agent = MovieAIAgent()
+        self.scraper = None  # Initialize scraper per search
         self.active_searches = {}
     
     def start_search(self, movie_name, search_id):
@@ -35,26 +35,53 @@ class SearchManager:
                     'start_time': datetime.now().isoformat()
                 }
                 
+                # Initialize scraper for this search
+                self.scraper = AdvancedMovieScraper()
+                
                 # Perform the search
-                results, search_time = self.agent.search_movie(movie_name)
+                start_time = time.time()
+                result = self.scraper.search_all_sites(movie_name)
+                search_time = time.time() - start_time
                 
-                # Store results
-                search_results[search_id] = {
-                    'movie_name': movie_name,
-                    'results': results,
-                    'search_time': search_time,
-                    'total_results': len(results),
-                    'total_links': sum(len(r['streaming_links']) for r in results),
-                    'completed_time': datetime.now().isoformat()
-                }
-                
-                # Update status
-                search_status[search_id] = {
-                    'status': 'completed',
-                    'progress': 100,
-                    'message': f'Found {len(results)} results with {sum(len(r["streaming_links"]) for r in results)} streaming links',
-                    'search_time': search_time
-                }
+                # Process results
+                if result['status'] == 'success':
+                    results = result['results']
+                    total_links = sum(len(r.get('streaming_urls', [])) for r in results)
+                    
+                    # Store results
+                    search_results[search_id] = {
+                        'movie_name': movie_name,
+                        'results': results,
+                        'search_time': round(search_time, 2),
+                        'total_results': len(results),
+                        'total_links': total_links,
+                        'completed_time': datetime.now().isoformat()
+                    }
+                    
+                    # Update status
+                    search_status[search_id] = {
+                        'status': 'completed',
+                        'progress': 100,
+                        'message': f'Found {len(results)} results with {total_links} streaming links',
+                        'search_time': round(search_time, 2)
+                    }
+                else:
+                    # No results found
+                    search_results[search_id] = {
+                        'movie_name': movie_name,
+                        'results': [],
+                        'search_time': round(search_time, 2),
+                        'total_results': 0,
+                        'total_links': 0,
+                        'completed_time': datetime.now().isoformat()
+                    }
+                    
+                    search_status[search_id] = {
+                        'status': 'completed',
+                        'progress': 100,
+                        'message': result.get('message', 'No results found'),
+                        'search_time': round(search_time, 2)
+                    }
                 
             except Exception as e:
                 search_status[search_id] = {

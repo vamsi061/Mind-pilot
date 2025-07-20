@@ -436,14 +436,18 @@
                 const resultDiv = document.createElement('div');
                 resultDiv.className = 'result-item';
                 
+                const streamingUrls = result.streaming_urls || [];
+                
                 resultDiv.innerHTML = `
                     <div class="result-title">${index + 1}. ${result.title}</div>
-                    <div class="result-site">📺 Site: ${result.site}</div>
-                    <a href="${result.url}" target="_blank" class="result-url">🌐 ${result.url}</a>
+                    <div class="result-site">📺 Site: ${result.source}</div>
+                    <div class="result-site">🌍 Language: ${result.language}</div>
+                    <div class="result-site">🎬 Quality: ${result.quality}</div>
+                    <a href="${result.movie_url}" target="_blank" class="result-url">🌐 Movie Page: ${result.movie_url}</a>
                     <div class="streaming-links">
-                        <strong>🔗 Streaming Links (${result.streaming_links.length} found):</strong><br>
-                        ${result.streaming_links.map((link, linkIndex) => 
-                            `<a href="${link.url}" target="_blank" class="streaming-link">${linkIndex + 1}. ${link.text}</a>`
+                        <strong>🔗 Streaming URLs (${streamingUrls.length} found):</strong><br>
+                        ${streamingUrls.map((link, linkIndex) => 
+                            `<a href="${link.url}" target="_blank" class="streaming-link">${linkIndex + 1}. ${link.text} (${link.type})</a>`
                         ).join('')}
                     </div>
                 `;
