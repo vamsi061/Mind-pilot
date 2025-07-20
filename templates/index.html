@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 Movie AI Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .search-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e1e5e9;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .results-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .result-item {
+            border: 1px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .result-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .result-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .result-site {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .result-url {
+            color: #007bff;
+            text-decoration: none;
+            word-break: break-all;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .streaming-links {
+            margin-top: 15px;
+        }
+
+        .streaming-link {
+            display: inline-block;
+            background: #f8f9fa;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background 0.2s ease;
+        }
+
+        .streaming-link:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            min-width: 150px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .recent-searches {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-top: 30px;
+        }
+
+        .recent-item {
+            padding: 10px;
+            border-bottom: 1px solid #e1e5e9;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .recent-item:hover {
+            background: #f8f9fa;
+        }
+
+        .recent-item:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎬 Movie AI Agent</h1>
+            <p>Find streaming URLs for your favorite movies across multiple platforms</p>
+        </div>
+
+        <div class="search-section">
+            <h2>🔍 Search for Movies</h2>
+            <form class="search-form" id="searchForm">
+                <input type="text" class="search-input" id="movieInput" placeholder="Enter movie name (e.g., The Matrix, Inception)" required>
+                <button type="submit" class="search-btn" id="searchBtn">
+                    <span id="searchBtnText">Search</span>
+                    <span id="searchBtnLoading" class="loading" style="display: none;"></span>
+                </button>
+            </form>
+            
+            <div class="status-section" id="statusSection">
+                <h3>Search Status</h3>
+                <div id="statusMessage">Initializing search...</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats" id="statsSection" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-number" id="totalResults">0</div>
+                <div class="stat-label">Movies Found</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalLinks">0</div>
+                <div class="stat-label">Streaming Links</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="searchTime">0s</div>
+                <div class="stat-label">Search Time</div>
+            </div>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <h2>📺 Search Results</h2>
+            <div id="resultsContainer"></div>
+        </div>
+
+        <div class="recent-searches" id="recentSection">
+            <h2>🕒 Recent Searches</h2>
+            <div id="recentContainer">Loading recent searches...</div>
+        </div>
+    </div>
+
+    <script>
+        let currentSearchId = null;
+        let statusCheckInterval = null;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRecentSearches();
+        });
+
+        // Search form submission
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            startSearch();
+        });
+
+        function startSearch() {
+            const movieName = document.getElementById('movieInput').value.trim();
+            if (!movieName) return;
+
+            // Update UI
+            setSearchingState(true);
+            showStatusSection();
+            hideResultsSection();
+
+            // Start search
+            fetch('/api/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ movie_name: movieName })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                currentSearchId = data.search_id;
+                startStatusPolling();
+            })
+            .catch(error => {
+                showError('Search failed: ' + error.message);
+                setSearchingState(false);
+            });
+        }
+
+        function startStatusPolling() {
+            if (statusCheckInterval) {
+                clearInterval(statusCheckInterval);
+            }
+
+            statusCheckInterval = setInterval(() => {
+                fetch(`/api/status/${currentSearchId}`)
+                    .then(response => response.json())
+                    .then(status => {
+                        updateStatus(status);
+                        
+                        if (status.status === 'completed' || status.status === 'error') {
+                            clearInterval(statusCheckInterval);
+                            setSearchingState(false);
+                            
+                            if (status.status === 'completed') {
+                                loadResults();
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Status check failed:', error);
+                    });
+            }, 2000);
+        }
+
+        function updateStatus(status) {
+            const statusMessage = document.getElementById('statusMessage');
+            const progressFill = document.getElementById('progressFill');
+            
+            statusMessage.textContent = status.message || 'Searching...';
+            progressFill.style.width = (status.progress || 0) + '%';
+        }
+
+        function loadResults() {
+            fetch(`/api/results/${currentSearchId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    displayResults(data);
+                    updateStats(data);
+                    loadRecentSearches();
+                })
+                .catch(error => {
+                    showError('Failed to load results: ' + error.message);
+                });
+        }
+
+        function displayResults(data) {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = '';
+
+            if (!data.results || data.results.length === 0) {
+                container.innerHTML = '<div class="error">No streaming URLs found for this movie. Try searching with a different title.</div>';
+                showResultsSection();
+                return;
+            }
+
+            data.results.forEach((result, index) => {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'result-item';
+                
+                const streamingUrls = result.streaming_urls || [];
+                
+                resultDiv.innerHTML = `
+                    <div class="result-title">${index + 1}. ${result.title}</div>
+                    <div class="result-site">📺 Site: ${result.source}</div>
+                    <div class="result-site">🌍 Language: ${result.language}</div>
+                    <div class="result-site">🎬 Quality: ${result.quality}</div>
+                    <a href="${result.movie_url}" target="_blank" class="result-url">🌐 Movie Page: ${result.movie_url}</a>
+                    <div class="streaming-links">
+                        <strong>🔗 Streaming URLs (${streamingUrls.length} found):</strong><br>
+                        ${streamingUrls.map((link, linkIndex) => 
+                            `<a href="${link.url}" target="_blank" class="streaming-link">${linkIndex + 1}. ${link.text} (${link.type})</a>`
+                        ).join('')}
+                    </div>
+                `;
+                
+                container.appendChild(resultDiv);
+            });
+
+            showResultsSection();
+        }
+
+        function updateStats(data) {
+            document.getElementById('totalResults').textContent = data.total_results;
+            document.getElementById('totalLinks').textContent = data.total_links;
+            document.getElementById('searchTime').textContent = data.search_time.toFixed(1) + 's';
+            document.getElementById('statsSection').style.display = 'flex';
+        }
+
+        function loadRecentSearches() {
+            fetch('/api/recent')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('recentContainer');
+                    
+                    if (!data.recent_searches || data.recent_searches.length === 0) {
+                        container.innerHTML = '<p>No recent searches</p>';
+                        return;
+                    }
+
+                    container.innerHTML = data.recent_searches.map(search => `
+                        <div class="recent-item" onclick="loadSearchFromHistory('${search.search_id}')">
+                            <strong>${search.movie_name}</strong><br>
+                            <small>${search.total_results} results, ${search.total_links} links • ${new Date(search.completed_time).toLocaleString()}</small>
+                        </div>
+                    `).join('');
+                })
+                .catch(error => {
+                    console.error('Failed to load recent searches:', error);
+                });
+        }
+
+        function loadSearchFromHistory(searchId) {
+            fetch(`/api/results/${searchId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    document.getElementById('movieInput').value = data.movie_name;
+                    displayResults(data);
+                    updateStats(data);
+                    showResultsSection();
+                    showStatsSection();
+                })
+                .catch(error => {
+                    showError('Failed to load search history: ' + error.message);
+                });
+        }
+
+        function setSearchingState(searching) {
+            const btn = document.getElementById('searchBtn');
+            const btnText = document.getElementById('searchBtnText');
+            const btnLoading = document.getElementById('searchBtnLoading');
+            
+            btn.disabled = searching;
+            if (searching) {
+                btnText.style.display = 'none';
+                btnLoading.style.display = 'inline-block';
+            } else {
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }
+        }
+
+        function showStatusSection() {
+            document.getElementById('statusSection').style.display = 'block';
+        }
+
+        function showResultsSection() {
+            document.getElementById('resultsSection').style.display = 'block';
+        }
+
+        function hideResultsSection() {
+            document.getElementById('resultsSection').style.display = 'none';
+        }
+
+        function showStatsSection() {
+            document.getElementById('statsSection').style.display = 'flex';
+        }
+
+        function showError(message) {
+            const statusSection = document.getElementById('statusSection');
+            statusSection.innerHTML = `<div class="error">${message}</div>`;
+            statusSection.style.display = 'block';
+        }
+
+        function showSuccess(message) {
+            const statusSection = document.getElementById('statusSection');
+            statusSection.innerHTML = `<div class="success">${message}</div>`;
+            statusSection.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
