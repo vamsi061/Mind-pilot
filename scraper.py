@@ -354,12 +354,14 @@ class MovieScraper:
             r'embed',
             r'player',
             r'download',
+            r'magnet:',
             r'\.mp4',
             r'\.m3u8',
             r'\.webm',
             r'\.avi',
             r'\.mkv',
-            r'\.3gp'
+            r'\.3gp',
+            r'\.torrent'
         ]
         
         # Also check for common streaming domains
@@ -373,7 +375,34 @@ class MovieScraper:
             'streamango',
             'openload',
             'rapidvideo',
-            'streamcherry'
+            'streamcherry',
+            'gofile.io',
+            'mega.nz',
+            'drive.google.com',
+            'dropbox.com',
+            'mediafire.com',
+            'rapidgator.net',
+            'upload-4ever.com',
+            'turbobit.net',
+            'katfile.com',
+            'rosefile.net',
+            'ddownload.com',
+            'uploadhaven.com',
+            'ibomma.art',
+            'movierulz.art',
+            'cinevez.art',
+            'moviezwap.pink',
+            'telugupalaka.com',
+            'jiorockers.art',
+            'cinevood.art',
+            'gadg8.art',
+            '1337x.to',
+            'netmirror.org',
+            'uflix.art',
+            'multimovies.art',
+            'flixer.art',
+            'downloadhub.art',
+            'uhdmovies.art'
         ]
         
         url_lower = url.lower()
