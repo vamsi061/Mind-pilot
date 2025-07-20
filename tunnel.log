@@ -21,3 +21,9 @@
 2025-07-19T19:58:39Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.7
 2025/07/19 19:58:39 failed to sufficiently increase receive buffer size (was: 208 kiB, wanted: 7168 kiB, got: 416 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details.
 2025-07-19T19:58:39Z INF Registered tunnel connection connIndex=0 connection=fda85877-68cb-47ab-b5e3-987d3ad3bf49 event=0 ip=198.41.192.7 location=iad17 protocol=quic
+2025-07-19T20:04:09Z ERR Failed to serve tunnel connection error="failed to accept QUIC stream: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.192.7
+2025-07-19T20:04:09Z ERR Serve tunnel error error="failed to accept QUIC stream: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.192.7
+2025-07-19T20:04:09Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.7
+2025-07-19T20:04:09Z ERR Connection terminated error="failed to accept QUIC stream: timeout: no recent network activity" connIndex=0
+2025-07-19T20:04:25Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.7
+2025-07-19T20:04:25Z INF Registered tunnel connection connIndex=0 connection=3adb197a-1e6d-4aa1-beee-01d156b9f0f7 event=0 ip=198.41.192.7 location=iad17 protocol=quic
