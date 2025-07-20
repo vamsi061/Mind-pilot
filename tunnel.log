@@ -26,3 +26,8 @@
 2025-07-20T04:41:52Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.200.193
 2025-07-20T04:41:53Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.63
 2025-07-20T04:41:53Z INF Registered tunnel connection connIndex=0 connection=507b9780-a134-4dbd-9675-32644d31cd85 event=0 ip=198.41.200.63 location=iad12 protocol=quic
+2025-07-20T04:47:44Z WRN Failed to serve tunnel connection error="context canceled" connIndex=0 event=0 ip=198.41.200.63
+2025-07-20T04:47:44Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.200.63
+2025-07-20T04:47:44Z ERR Connection terminated error="context canceled" connIndex=0
+2025-07-20T04:48:02Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.63
+2025-07-20T04:48:02Z INF Registered tunnel connection connIndex=0 connection=e9f3bec1-3bd6-4fdb-ac2a-95b6af79c310 event=0 ip=198.41.200.63 location=iad12 protocol=quic
