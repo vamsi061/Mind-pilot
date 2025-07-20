@@ -3,66 +3,6 @@
 
 STREAMING_WEBSITES = [
     {
-        "name": "iBOMMA",
-        "base_url": "https://www.ibomma.art",
-        "search_url": "https://www.ibomma.art/search",
-        "search_param": "q",
-        "enabled": True,
-        "delay": 2,
-        "search_selector": "input[name='q'], input[type='search']",
-        "results_selector": "a[href*='/movie/'], .movie-item a, .search-item a",
-        "title_selector": "h2, .title, .movie-title",
-        "streaming_selectors": [
-            "a[href*='watch']",
-            "a[href*='stream']", 
-            "a[href*='play']",
-            "a[href*='download']",
-            ".watch-link",
-            ".stream-link",
-            ".download-link"
-        ]
-    },
-    {
-        "name": "MovieRulz",
-        "base_url": "https://www.movierulz.art",
-        "search_url": "https://www.movierulz.art/search",
-        "search_param": "s",
-        "enabled": True,
-        "delay": 2,
-        "search_selector": "input[name='s'], input[type='search']",
-        "results_selector": "a[href*='/movie/'], .movie-item a, .search-item a",
-        "title_selector": "h2, .title, .movie-title",
-        "streaming_selectors": [
-            "a[href*='watch']",
-            "a[href*='stream']", 
-            "a[href*='play']",
-            "a[href*='download']",
-            ".watch-link",
-            ".stream-link",
-            ".download-link"
-        ]
-    },
-    {
-        "name": "Cinevez",
-        "base_url": "https://www.cinevez.art",
-        "search_url": "https://www.cinevez.art/search",
-        "search_param": "q",
-        "enabled": True,
-        "delay": 2,
-        "search_selector": "input[name='q'], input[type='search']",
-        "results_selector": "a[href*='/movie/'], .movie-item a, .search-item a",
-        "title_selector": "h2, .title, .movie-title",
-        "streaming_selectors": [
-            "a[href*='watch']",
-            "a[href*='stream']", 
-            "a[href*='play']",
-            "a[href*='download']",
-            ".watch-link",
-            ".stream-link",
-            ".download-link"
-        ]
-    },
-    {
         "name": "MoviezWap",
         "base_url": "https://www.moviezwap.pink",
         "search_url": "https://www.moviezwap.pink/search.php",
@@ -83,13 +23,53 @@ STREAMING_WEBSITES = [
         ]
     },
     {
-        "name": "TeluguPalaka",
-        "base_url": "https://www.telugupalaka.com",
-        "search_url": "https://www.telugupalaka.com/search",
-        "search_param": "q",
+        "name": "5MovieRulz",
+        "base_url": "https://www.5movierulz.rich",
+        "search_url": "https://www.5movierulz.rich/search_movies",
+        "search_param": "s",
         "enabled": True,
         "delay": 2,
+        "search_selector": "input[name='s']",
+        "results_selector": "a[href*='/movie/']",
+        "title_selector": "h2, .title, .movie-title",
+        "streaming_selectors": [
+            "a[href*='watch']",
+            "a[href*='stream']", 
+            "a[href*='play']",
+            "a[href*='download']",
+            ".watch-link",
+            ".stream-link",
+            ".download-link"
+        ]
+    },
+    {
+        "name": "iBOMMA",
+        "base_url": "https://www.ibomma.art",
+        "search_url": "https://www.ibomma.art/search",
+        "search_param": "q",
+        "enabled": False,  # Disabled due to DNS issues
+        "delay": 2,
         "search_selector": "input[name='q'], input[type='search']",
+        "results_selector": "a[href*='/movie/'], .movie-item a, .search-item a",
+        "title_selector": "h2, .title, .movie-title",
+        "streaming_selectors": [
+            "a[href*='watch']",
+            "a[href*='stream']", 
+            "a[href*='play']",
+            "a[href*='download']",
+            ".watch-link",
+            ".stream-link",
+            ".download-link"
+        ]
+    },
+    {
+        "name": "MovieRulz",
+        "base_url": "https://www.movierulz.art",
+        "search_url": "https://www.movierulz.art/search",
+        "search_param": "s",
+        "enabled": False,  # Disabled due to DNS issues
+        "delay": 2,
+        "search_selector": "input[name='s'], input[type='search']",
         "results_selector": "a[href*='/movie/'], .movie-item a, .search-item a",
         "title_selector": "h2, .title, .movie-title",
         "streaming_selectors": [
@@ -107,47 +87,7 @@ STREAMING_WEBSITES = [
         "base_url": "https://www.jiorockers.art",
         "search_url": "https://www.jiorockers.art/search",
         "search_param": "s",
-        "enabled": True,
-        "delay": 2,
-        "search_selector": "input[name='s'], input[type='search']",
-        "results_selector": "a[href*='/movie/'], .movie-item a, .search-item a",
-        "title_selector": "h2, .title, .movie-title",
-        "streaming_selectors": [
-            "a[href*='watch']",
-            "a[href*='stream']", 
-            "a[href*='play']",
-            "a[href*='download']",
-            ".watch-link",
-            ".stream-link",
-            ".download-link"
-        ]
-    },
-    {
-        "name": "Cinevood",
-        "base_url": "https://www.cinevood.art",
-        "search_url": "https://www.cinevood.art/search",
-        "search_param": "q",
-        "enabled": True,
-        "delay": 2,
-        "search_selector": "input[name='q'], input[type='search']",
-        "results_selector": "a[href*='/movie/'], .movie-item a, .search-item a",
-        "title_selector": "h2, .title, .movie-title",
-        "streaming_selectors": [
-            "a[href*='watch']",
-            "a[href*='stream']", 
-            "a[href*='play']",
-            "a[href*='download']",
-            ".watch-link",
-            ".stream-link",
-            ".download-link"
-        ]
-    },
-    {
-        "name": "Gadg8",
-        "base_url": "https://www.gadg8.art",
-        "search_url": "https://www.gadg8.art/search",
-        "search_param": "s",
-        "enabled": True,
+        "enabled": False,  # Disabled due to DNS issues
         "delay": 2,
         "search_selector": "input[name='s'], input[type='search']",
         "results_selector": "a[href*='/movie/'], .movie-item a, .search-item a",
@@ -167,7 +107,7 @@ STREAMING_WEBSITES = [
         "base_url": "https://www.1337x.to",
         "search_url": "https://www.1337x.to/search",
         "search_param": "q",
-        "enabled": True,
+        "enabled": False,  # Disabled due to 403 error
         "delay": 2,
         "search_selector": "input[name='q'], input[type='search']",
         "results_selector": "a[href*='/torrent/'], .name a",
@@ -180,123 +120,122 @@ STREAMING_WEBSITES = [
         ]
     },
     {
-        "name": "NetMirror",
-        "base_url": "https://www.netmirror.org",
-        "search_url": "https://www.netmirror.org/search",
+        "name": "YTS",
+        "base_url": "https://yts.mx",
+        "search_url": "https://yts.mx/browse-movies",
+        "search_param": "query",
+        "enabled": True,
+        "delay": 2,
+        "search_selector": "input[name='query'], input[type='search']",
+        "results_selector": ".browse-movie-title a",
+        "title_selector": "h1, .movie-title",
+        "streaming_selectors": [
+            "a[href*='magnet:']",
+            "a[href*='download']",
+            ".download-torrent",
+            ".magnet-download"
+        ]
+    },
+    {
+        "name": "RARBG",
+        "base_url": "https://rarbg.to",
+        "search_url": "https://rarbg.to/torrents.php",
+        "search_param": "search",
+        "enabled": True,
+        "delay": 2,
+        "search_selector": "input[name='search'], input[type='search']",
+        "results_selector": ".lista2t a",
+        "title_selector": "h1, .movie-title",
+        "streaming_selectors": [
+            "a[href*='magnet:']",
+            "a[href*='download']",
+            ".download-link",
+            ".magnet-link"
+        ]
+    },
+    {
+        "name": "ThePirateBay",
+        "base_url": "https://thepiratebay.org",
+        "search_url": "https://thepiratebay.org/search.php",
         "search_param": "q",
         "enabled": True,
         "delay": 2,
         "search_selector": "input[name='q'], input[type='search']",
-        "results_selector": "a[href*='/movie/'], .movie-item a, .search-item a",
-        "title_selector": "h2, .title, .movie-title",
+        "results_selector": ".detName a",
+        "title_selector": "h1, .movie-title",
         "streaming_selectors": [
-            "a[href*='watch']",
-            "a[href*='stream']", 
-            "a[href*='play']",
+            "a[href*='magnet:']",
             "a[href*='download']",
-            ".watch-link",
-            ".stream-link",
-            ".download-link"
+            ".download-link",
+            ".magnet-link"
         ]
     },
     {
-        "name": "UFlix",
-        "base_url": "https://www.uflix.art",
-        "search_url": "https://www.uflix.art/search",
+        "name": "LimeTorrents",
+        "base_url": "https://www.limetorrents.info",
+        "search_url": "https://www.limetorrents.info/search",
+        "search_param": "search",
+        "enabled": True,
+        "delay": 2,
+        "search_selector": "input[name='search'], input[type='search']",
+        "results_selector": ".tt-name a",
+        "title_selector": "h1, .movie-title",
+        "streaming_selectors": [
+            "a[href*='magnet:']",
+            "a[href*='download']",
+            ".download-link",
+            ".magnet-link"
+        ]
+    },
+    {
+        "name": "KickassTorrents",
+        "base_url": "https://katcr.co",
+        "search_url": "https://katcr.co/usearch",
         "search_param": "q",
         "enabled": True,
         "delay": 2,
         "search_selector": "input[name='q'], input[type='search']",
-        "results_selector": "a[href*='/movie/'], .movie-item a, .search-item a",
-        "title_selector": "h2, .title, .movie-title",
+        "results_selector": ".cellMainLink a",
+        "title_selector": "h1, .movie-title",
         "streaming_selectors": [
-            "a[href*='watch']",
-            "a[href*='stream']", 
-            "a[href*='play']",
+            "a[href*='magnet:']",
             "a[href*='download']",
-            ".watch-link",
-            ".stream-link",
-            ".download-link"
+            ".download-link",
+            ".magnet-link"
         ]
     },
     {
-        "name": "MultiMovies",
-        "base_url": "https://www.multimovies.art",
-        "search_url": "https://www.multimovies.art/search",
-        "search_param": "s",
+        "name": "TorrentGalaxy",
+        "base_url": "https://torrentgalaxy.to",
+        "search_url": "https://torrentgalaxy.to/torrents.php",
+        "search_param": "search",
         "enabled": True,
         "delay": 2,
-        "search_selector": "input[name='s'], input[type='search']",
-        "results_selector": "a[href*='/movie/'], .movie-item a, .search-item a",
-        "title_selector": "h2, .title, .movie-title",
+        "search_selector": "input[name='search'], input[type='search']",
+        "results_selector": ".tgxtablecell a",
+        "title_selector": "h1, .movie-title",
         "streaming_selectors": [
-            "a[href*='watch']",
-            "a[href*='stream']", 
-            "a[href*='play']",
+            "a[href*='magnet:']",
             "a[href*='download']",
-            ".watch-link",
-            ".stream-link",
-            ".download-link"
+            ".download-link",
+            ".magnet-link"
         ]
     },
     {
-        "name": "Flixer",
-        "base_url": "https://www.flixer.art",
-        "search_url": "https://www.flixer.art/search",
+        "name": "Nyaa",
+        "base_url": "https://nyaa.si",
+        "search_url": "https://nyaa.si",
         "search_param": "q",
         "enabled": True,
         "delay": 2,
         "search_selector": "input[name='q'], input[type='search']",
-        "results_selector": "a[href*='/movie/'], .movie-item a, .search-item a",
-        "title_selector": "h2, .title, .movie-title",
+        "results_selector": ".success a",
+        "title_selector": "h1, .movie-title",
         "streaming_selectors": [
-            "a[href*='watch']",
-            "a[href*='stream']", 
-            "a[href*='play']",
+            "a[href*='magnet:']",
             "a[href*='download']",
-            ".watch-link",
-            ".stream-link",
-            ".download-link"
-        ]
-    },
-    {
-        "name": "DownloadHub",
-        "base_url": "https://www.downloadhub.art",
-        "search_url": "https://www.downloadhub.art/search",
-        "search_param": "s",
-        "enabled": True,
-        "delay": 2,
-        "search_selector": "input[name='s'], input[type='search']",
-        "results_selector": "a[href*='/movie/'], .movie-item a, .search-item a",
-        "title_selector": "h2, .title, .movie-title",
-        "streaming_selectors": [
-            "a[href*='watch']",
-            "a[href*='stream']", 
-            "a[href*='play']",
-            "a[href*='download']",
-            ".watch-link",
-            ".stream-link",
-            ".download-link"
-        ]
-    },
-    {
-        "name": "UHDMovies",
-        "base_url": "https://www.uhdmovies.art",
-        "search_url": "https://www.uhdmovies.art/search",
-        "search_param": "q",
-        "enabled": True,
-        "delay": 2,
-        "search_selector": "input[name='q'], input[type='search']",
-        "results_selector": "a[href*='/movie/'], .movie-item a, .search-item a",
-        "title_selector": "h2, .title, .movie-title",
-        "streaming_selectors": [
-            "a[href*='watch']",
-            "a[href*='stream']", 
-            "a[href*='play']",
-            "a[href*='download']",
-            ".watch-link",
-            ".stream-link",
-            ".download-link"
+            ".download-link",
+            ".magnet-link"
         ]
     }
 ]
